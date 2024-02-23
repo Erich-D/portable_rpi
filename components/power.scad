@@ -141,10 +141,61 @@ module smdSop(p=8){
     }
 }
 
-module momentarySwitch(){
-
-    cylinder(11,13.5/2);
-
+module momentarySwitch(cut=false){
+    if(!cut){
+        color("Black",0.9) intersection(){
+            sphere(r=17.3/2);
+            translate([-9,-9,0])
+            cube([18,18,5.6]);
+        }
+        color("Black",1) intersection(){
+            cylinder(7.7,r=12.1/2);
+            translate([0,0,.5])
+            sphere(17.3/2-.9);
+        }
+        translate([0,0,-1])
+        color("Black",1) difference(){
+            cylinder(1,r=13.2/2);
+            translate([6,-5,-.25])
+            cube([5,10,2]);
+        }
+        intersection(){
+            color( c = [0, .03, .05, .9] ) union(){
+                for(i=[0:1:11]){
+                    translate([0,0,-i*.5])
+                    rotate([0,-1,0])
+                    scale([1,1,.1])
+                    sphere(r=11.7/2);
+                }
+                translate([0,0,-9])
+                cylinder(9,r=10.7/2);
+            }
+            translate([-10.5/2,-8,-10.5])
+            color("Black",1) cube([10.5,16,10]);
+        }
+        translate([0,0,-10])
+        color("Black",1) cylinder(10,r=9.1/2);
+        translate([3,-2,-13])
+        color("Gold") cube([.5,4,3]);
+        translate([-3,-2,-13])
+        color("Gold") cube([.5,4,3]);
+    }else if(cut){
+        color("Pink",.8) union(){
+            cylinder(8,r=17.5/2);
+            translate([0,0,-1.2])
+            difference(){
+                cylinder(1.2,r=13.5/2);
+                translate([6,-5,-.25])
+                cube([5,10,2]);
+            }
+            translate([0,0,-21])
+            intersection(){
+                cylinder(20,r=12.1/2);
+                translate([-10.5/2,-7,.5])
+                cube([10.5,14,20]);
+            }
+        }
+    }
 }
 
 module fan(s=40,d=10){
