@@ -137,7 +137,7 @@ module rpi4b(cut=false){
   if(!cut){
     board_raspberrypi_4_model_b();
   }else{
-    //Rp4ShapedHole();
+    //Rp4ShapedHole(); 49x 58 mount holes
     color("Pink",0.5)
     union(){
       translate([-.4,-.4,-0.15])

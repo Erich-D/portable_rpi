@@ -7,8 +7,9 @@ use<components/adapters.scad>
 use<components/drives.scad>
 use<components/connectors.scad>
 use<shapes/extrusions.scad>
-use<fastening/inserts.scad>
+use<inserts.scad>//fastening
 use<shapes/compound.scad>
+use<battery/Ryobi_Batt.scad>
 include<D:\Documents\OpenSCAD\libraries\Gears\gears.scad>
 /* [View] */
 Views = 0; // [0:example,1:custom,2:top(part),3:bottom(part),4:screen(part)]
@@ -233,6 +234,17 @@ module mountPads(){
     }
 }
 
+module fanPads(){
+    intersection(){
+        union(){
+            translate([-widthOfEncloser/2+7,0,20])
+            rotate([0,90,0])
+            fan(mount=true);
+        }
+        mainBody();
+    }
+}
+
 // ******* creates project shell with major cutouts and block inserts for device mounts ** will return horizontal section of shell strating from s and ending at f 
 module shell(s=-1,f=overallHeight+30){
     angle = atan2(overallHeight-frontHeight,depthOfBevel);
@@ -268,7 +280,7 @@ module shell(s=-1,f=overallHeight+30){
             import("3x12insertSet.stl",convexity=10);
             translate([widthOfEncloser/2-8,-depthOfEncloser/2+Front_Backset+5,13.99])
             import("3x12insertSet.stl",convexity=10);
-            translate([-widthOfEncloser/2+8,depthOfEncloser/2-8,21.7])
+            translate([-widthOfEncloser/2+8,depthOfEncloser/2-8,21.7])//hdmi port screw holes
             import("3x12insertSet.stl",convexity=10);
             translate([-widthOfEncloser/2+8,depthOfEncloser/2-40,21.7])
             import("3x12insertSet.stl",convexity=10);
@@ -299,6 +311,8 @@ module shell(s=-1,f=overallHeight+30){
             translate([-20,batPos[1],batPos[2]])
             rotate([-90,0,0])
             usbCpanelMount();
+            translate([0,depthOfBevel/2,overallHeight-.5])
+            momentarySwitch(true);
         }
         translate([0,0,s+f/2])
         cube([310,310,f],center=true);
@@ -344,12 +358,14 @@ module batTopPlug(){
 
 //base();
 module base(){
-    translate([5.5,28.5,0])
-    import("battery/Ryobi_18V_Batt_Connect_no_ears_V3.stl", convexity=3);
+    // translate([5.5,28.5,0])
+    // import("battery/Ryobi_18V_Batt_Connect_no_ears_V3.stl", convexity=3);
+    ryobi_base();
 }
 
 module tower(){
-    import("battery/Ryobi_18V_Battery_Connector_Tower_V3.stl");
+    //import("battery/Ryobi_18V_Battery_Connector_Tower_V3.stl");
+    ryobi_tower();
 }
 // *********************** END import models for battery base and connection tower ***********************
 
@@ -438,6 +454,8 @@ module customView(){
     rotate([90,0,180])
     batTopPlug();
     baseBase();
+    translate([0,depthOfBevel/2,overallHeight-.5])
+    momentarySwitch();
 }
 
 module fullShell(cutView=true){
@@ -575,7 +593,23 @@ if(Views == 0){
     //     translate([6,6,-1])
     //    RPiRJ45BreakoutBoard(true);
     // }
-    momentarySwitch();
+    //momentarySwitch();
+    difference(){
+        fan(mount=true);
+        fan(cut=true);
+    }
+    
+    
+    // translate([0,0,-50])
+    // difference(){
+    //     surface(file="raspberry-pi-logo.png",center=true);
+    //     translate([-40,-40,52])
+    //     cube([80,80,100]);
+    //     translate([-40,-40,-1])
+    //     cube([80,80,51]);
+    // }
+    
+    //import("rpi_logo_grill.stl",convexity=10);
 }
 //baseBase();
 // translate(pad2Pos)
